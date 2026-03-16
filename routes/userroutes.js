@@ -14,7 +14,7 @@ import { authRole } from "../middlewares/authRole.js";
 
 const router = express.Router();
 
-const upload = multer({ dest: "uploads/" });
+const upload = multer({});
 
 /*
 🔓 Public Routes
