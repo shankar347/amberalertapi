@@ -14,7 +14,15 @@ import { authRole } from "../middlewares/authRole.js";
 
 const router = express.Router();
 
-const upload = multer({});
+/* Multer memory storage */
+const storage = multer.memoryStorage();
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB
+  },
+});
 
 /*
 🔓 Public Routes
@@ -36,6 +44,7 @@ router.post("/login", Login);
 */
 router.put(
   "/:id",
+  authMiddleware,
   upload.fields([
     { name: "selfie", maxCount: 1 },
     { name: "idProof", maxCount: 1 },

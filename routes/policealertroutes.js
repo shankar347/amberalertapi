@@ -21,10 +21,13 @@ import { authRole } from "../middlewares/authRole.js";
 
 const router = express.Router();
 
-// Configure multer for file uploads
+/* Multer memory storage (no uploads folder) */
+const storage = multer.memoryStorage();
+
 const upload = multer({
+  storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 10 * 1024 * 1024, // 10MB
   },
 });
 
@@ -48,7 +51,7 @@ router.get(
   getMyAlerts
 );
 
-// Get alerts by status (active, resolved, draft)
+// Get alerts by status
 router.get(
   "/alerts/status/:status",
   authMiddleware,
@@ -56,7 +59,7 @@ router.get(
   getAlertsByStatus
 );
 
-// Get recent alerts (last 7 days)
+// Get recent alerts
 router.get(
   "/alerts/recent",
   authMiddleware,
@@ -64,7 +67,7 @@ router.get(
   getRecentAlerts
 );
 
-// Create new AMBER Alert
+// Create new alert
 router.post(
   "/alerts",
   authMiddleware,
@@ -76,7 +79,7 @@ router.post(
   createAlert
 );
 
-// Get single alert by ID
+// Get single alert
 router.get(
   "/alerts/:id",
   authMiddleware,
@@ -84,7 +87,7 @@ router.get(
   getAlertDetails
 );
 
-// Alternative route for getting alert by ID (for consistency)
+// Alternative route
 router.get(
   "/alert/:id",
   authMiddleware,
@@ -104,7 +107,7 @@ router.put(
   updateAlert
 );
 
-// Mark alert as resolved
+// Resolve alert
 router.put(
   "/alerts/:id/resolve",
   authMiddleware,
@@ -112,7 +115,7 @@ router.put(
   resolveAlert
 );
 
-// Delete/cancel alert
+// Delete alert
 router.delete(
   "/alerts/:id",
   authMiddleware,
@@ -120,23 +123,15 @@ router.delete(
   deleteAlert
 );
 
-// Get all tips/reports for a specific alert
+// Get alert tips
 router.get("/alerts/:id/tips", authMiddleware, getAlertTips);
 
-// Update tip/report status
+// Update tip status
 router.put(
   "/tips/:tipId/status",
   authMiddleware,
   authRole(["police", "admin"]),
   updateTipStatus
 );
-
-// // Bulk operations
-// router.post(
-//   "/alerts/bulk/resolve",
-//   authMiddleware,
-//   authRole(["police", "admin"]),
-//   resolveMultipleAlerts
-// );
 
 export default router;
