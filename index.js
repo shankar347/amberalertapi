@@ -19,6 +19,21 @@ app.use(cookieparser());
 
 mongoose.connect(process.env.MONGO_URI);
 
+/* ROOT ROUTE */
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Police Alert API is running successfully",
+    version: "1.0.0",
+    endpoints: {
+      user: "/api/v1/user",
+      police: "/api/v1/police",
+      public: "/api/v1/public",
+      notification: "/api/v1/notification",
+    },
+  });
+});
+
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/police", policeAlertRoutes);
 app.use("/api/v1/public", userAlertRoutes);
