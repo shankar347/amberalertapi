@@ -175,37 +175,6 @@ export const Login = async (req, res) => {
 
 /*
 =====================================
-GET USER PROFILE
-=====================================
-*/
-export const getProfile = async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    const user = await User.findById(userId).select("-password");
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to get profile",
-      error: error.message,
-    });
-  }
-};
-
-/*
-=====================================
 UPDATE USER PROFILE
 =====================================
 */
@@ -320,10 +289,23 @@ export const updateProfile = async (req, res) => {
 
     await user.save();
 
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    let data = user.toObject();
+
+    data = {
+      ...data,
+      token,
+    };
+
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      data: user,
+      data: data,
     });
   } catch (error) {
     console.log(error);
@@ -335,7 +317,31 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
+export const getProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to get profile",
+      error: error.message,
+    });
+  }
+};
 export const getUserAlerts = async (req, res) => {
   try {
     const userId = req.user.id;
