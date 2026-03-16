@@ -14,7 +14,7 @@ import {
   getAlertById,
   getAlertsByStatus,
   getRecentAlerts,
-} from "../controller/policeAlertController.js";
+} from "../controller/policealertcontroller.js";
 
 import { authMiddleware } from "../middlewares/auth.js";
 import { authRole } from "../middlewares/authRole.js";
