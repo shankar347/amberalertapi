@@ -4,6 +4,7 @@ import SightingReport from "../model/SightingReportschema.js";
 import fs from "fs";
 import path from "path";
 import cloudinary from "../config/cloudinary.js";
+import uploadToCloudinary from "../utils/uploadimage.js";
 
 /*
 🌍 Public: Get active alerts with location-based filtering
@@ -182,7 +183,7 @@ export const reportSighting = async (req, res) => {
 
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
-        const result = await cloudinary.uploader.upload(file.path, {
+        const result = await uploadToCloudinary(file.buffer, {
           folder: "amber_alert/sightings",
         });
 

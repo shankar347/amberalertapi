@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import cloudinary from "../config/cloudinary.js";
 import Alert from "../model/alertschema.js";
 import User from "../model/userschema.js";
+import uploadToCloudinary from "../utils/uploadimage.js";
 
 /*
 =====================================
@@ -48,27 +49,28 @@ export const Signup = async (req, res) => {
 
     // SELFIE
     if (req.files?.selfie) {
-      const result = await cloudinary.uploader.upload(
-        req.files.selfie[0].path,
-        { folder: "amber_alert/selfie" }
+      const result = await uploadToCloudinary(
+        req.files.selfie[0].buffer,
+        "amber_alert/selfie"
       );
       selfieImage = result.secure_url;
     }
 
     // ID PROOF
     if (req.files?.idProof) {
-      const result = await cloudinary.uploader.upload(
-        req.files.idProof[0].path,
-        { folder: "amber_alert/id_proof" }
+      const result = await uploadToCloudinary(
+        req.files.idProof[0].buffer,
+        "amber_alert/id_proof"
       );
       idProofImage = result.secure_url;
     }
 
     // BADGE
     if (req.files?.badge) {
-      const result = await cloudinary.uploader.upload(req.files.badge[0].path, {
-        folder: "amber_alert/badge",
-      });
+      const result = await uploadToCloudinary(
+        req.files.badge[0].buffer,
+        "amber_alert/badge"
+      );
       badgeImage = result.secure_url;
     }
 
@@ -270,9 +272,9 @@ export const updateProfile = async (req, res) => {
     }
 
     if (req.files?.selfie) {
-      const result = await cloudinary.uploader.upload(
-        req.files.selfie[0].path,
-        { folder: "amber_alert/selfie" }
+      const result = await uploadToCloudinary(
+        req.files.selfie[0].buffer,
+        "amber_alert/selfie"
       );
 
       selfieImage = result.secure_url;

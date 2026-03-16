@@ -9,6 +9,7 @@ import {
   sendAlertToUsers,
   NOTIFICATION_TEMPLATES,
 } from "../utils/notificationHelper.js";
+import uploadToCloudinary from "../utils/uploadimage.js";
 
 export const createAlert = async (req, res) => {
   try {
@@ -61,11 +62,9 @@ export const createAlert = async (req, res) => {
 
     // CHILD PHOTO
     if (req.files?.childPhoto) {
-      const result = await cloudinary.uploader.upload(
-        req.files.childPhoto[0].path,
-        {
-          folder: "amber_alert/child_photos",
-        }
+      const result = await uploadToCloudinary(
+        req.files.childPhoto[0].buffer,
+        "amber_alert/child_photos"
       );
 
       childPhoto = result.secure_url;
@@ -74,9 +73,10 @@ export const createAlert = async (req, res) => {
     // ADDITIONAL IMAGES
     if (req.files?.additionalImages) {
       for (const file of req.files.additionalImages) {
-        const result = await cloudinary.uploader.upload(file.path, {
-          folder: "amber_alert/additional_images",
-        });
+        const result = await uploadToCloudinary(
+          file.buffer,
+          "amber_alert/additional_images"
+        );
 
         additionalImages.push(result.secure_url);
       }
